@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #slider {
+  position: relative;
+  margin: 0 auto;
+  width: 80%;
+}
+
+#slides {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#slides audio {
+  display: none;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  margin-top: -25px;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  line-height: 50px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 2em;
+}
+
+#prev {
+  left: 0;
+}
+
+#next {
+  right: 0;
+}
+    </style>
+</head>
+<body>
+    <div id="slider">
+        <div id="slides">
+          <audio src="./音频/鸡.mp3" controls></audio>
+          <audio src="./音频/你.mp3" controls></audio>
+          <audio src="./音频/太.mp3" controls></audio>
+          <audio src="./音频/美.mp3" controls></audio>
+        </div>
+        <a href="#" class="arrow" id="prev"><i class="fa fa-chevron-left"></i></a>
+        <a href="#" class="arrow" id="next"><i class="fa fa-chevron-right"></i></a>
+      </div>
+</body>
+<script>
+    var currentSlide = 0;
+var slides = document.getElementById("slides").children;
+var totalSlides = slides.length;
+
+function nextSlide() {
+  goToSlide(currentSlide + 1);
+}
+
+function previousSlide() {
+  goToSlide(currentSlide - 1);
+}
+
+function goToSlide(n) {
+  slides[currentSlide].getElementsByTagName('audio')[0].pause();
+  slides[currentSlide].getElementsByTagName('audio')[0].currentTime = 1;
+  slides[currentSlide].style.display = 'none';
+  currentSlide = (n + totalSlides) % totalSlides;
+  slides[currentSlide].style.display = 'block';
+  slides[currentSlide].getElementsByTagName('audio')[0].play();
+}
+
+document.getElementById("prev").addEventListener("click", function() {
+  previousSlide();
+});
+
+document.getElementById("next").addEventListener("click", function() {
+  nextSlide();
+});
+
+goToSlide(currentSlide);
+</script>
+</html>

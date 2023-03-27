@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  position: relative;
+  display: inline-block;
+  margin: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: transparent;
+  background-image: linear-gradient(to bottom, #fff, #eee);
+  transition: color 3s;
+}
+
+.card p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .card {
+    color: initial;
+    text-shadow: 0 0 10px rgb(74, 66, 66),
+               0 0 20px #f90,
+               0 0 30px #ff0,
+               0 0 40px #0f0,
+               0 0 50px #00f,
+               0 0 60px #90f,
+               0 0 70px #f0f;
+    position: relative;
+    background-image: none;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .card p {
+    display: block;
+    margin: 0;
+    padding: 1rem;
+    font-size: 1.5rem;
+    line-height: 1.5;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+          <p>
+            很高兴遇到你
+          </p>
+        </div>
+      </div>
+</body>
+<script>
+
+</script>
+</html>
