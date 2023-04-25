@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记忆卡片小游戏</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  #game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+  }
+  
+  .game-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px;
+    color: #fff;
+    font-size: 48px;
+  }
+  
+  .game-info {
+    margin-bottom: 20px;
+  }
+  
+  #canvas {
+    width: 1000px;
+    height: 500px;
+    border: 2px solid #fff;
+  }
+  #game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #000;
+  flex-direction: column;
+}
+
+.game-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  color: #fff;
+  font-size: 24px;
+}
+
+#canvas {
+  width: 100%;
+  height: 60vw;
+  max-height: calc(100vh - 150px);
+  border: 2px solid #fff;
+}
+button.move-left-button, button.move-right-button {
+      background-color: green;
+      color: white;
+      border: none;
+      outline: none;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .qiu{
+      background-color: green;
+      color: white;
+      border: none;
+      outline: none;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="game-container">
+      
+        <div class="game-info-container">
+          
+          <div class="game-info" id="score">得分：0</div>
+          <div class="game-info" id="lives">生命值：<span id="life-1"></span><span id="life-2"></span><span id="life-3"></span></div>
+        </div>
+        <canvas id="canvas"></canvas>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <div>
+          <button class="move-left-button">向左移动</button>
+          <button class="qiu" id="start-button">加速器</button>
+          <button class="move-right-button">向右移动</button>
+        </div>
+        <div class="game-info" id="game-counter"></div>
+      </div>
+</body>
+<!-- <script src="app.js"></script> -->
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+// 定义地图宽度和高度
+const MAP_WIDTH = canvas.width;
+const MAP_HEIGHT = canvas.height;
+
+// 定义小人、金币和障碍物的尺寸
+const PLAYER_SIZE = 20;
+const COIN_SIZE = 20;
+const OBSTACLE_SIZE = 20;
+
+// 定义小人的初始位置
+let playerX = MAP_WIDTH / 2 - PLAYER_SIZE / 2;
+let playerY = MAP_HEIGHT - PLAYER_SIZE - 20;
+
+// 定义金币和障碍物的初始位置
+let coins = [
+  {x: 100, y: 100},
+  {x: 300, y: 200},
+  {x: 500, y: 150}
+];
+
+let obstacles = [
+  {x: 100, y: 290},
+  {x: 250, y: 350},
+  {x: 400, y: 240}
+];
+
+// 定义分数和生命值
+let score = 0;
+let lives = 3;
+
+// 绘制小人
+function drawPlayer() {
+  ctx.fillStyle = 'green';
+  ctx.fillRect(playerX, playerY, PLAYER_SIZE, PLAYER_SIZE);
+}
+
+// 绘制金币
+function drawCoins() {
+  ctx.fillStyle = 'gold';
+  
+  for (let coin of coins) {
+    ctx.fillRect(coin.x, coin.y, COIN_SIZE, COIN_SIZE);
+  }
+}
+
+//  绘制障碍物
+function drawObstacles() {
+  ctx.fillStyle = 'red';
+
+  for (let obstacle of obstacles) {
+    ctx.fillRect(obstacle.x, obstacle.y, OBSTACLE_SIZE, OBSTACLE_SIZE);
+  }
+}
+
+// 添加一个计时器变量
+let counter = 0;
+// 获取游戏计时器的DOM元素
+const gameCounterElement = document.getElementById('game-counter');
+// 获取开始游戏按钮DOM元素
+const startButton = document.getElementById('start-button');
+
+// 启动游戏的函数
+function startGame() {
+    update();
+    // 开始计时
+    setInterval(() => {
+        counter++;
+        gameCounterElement.textContent = `已玩游戏：${counter} 秒`;
+    }, 1000);
+}
+
+// 监听开始游戏按钮的点击事件，点击后调用启动游戏函数
+startButton.addEventListener('click', startGame);
+
+// 更新游戏状态
+function update() {
+  // 移动金币和障碍物
+  for (let i = 0; i < coins.length; i++) {
+    coins[i].y += 2;
+    
+    if (coins[i].y > MAP_HEIGHT) {
+      coins[i].y = -30;
+      coins[i].x = Math.random() * (MAP_WIDTH - COIN_SIZE);
+    }
+  }
+
+  for (let i = 0; i < obstacles.length; i++) {
+    obstacles[i].y += 1;
+
+    if (obstacles[i].y > MAP_HEIGHT) {
+      obstacles[i].y = -50;
+      obstacles[i].x = Math.random() * (MAP_WIDTH - OBSTACLE_SIZE);
+    }
+  }
+
+  // 检测碰撞
+  for (let coin of coins) {
+    if (
+      playerX < coin.x + COIN_SIZE &&
+      playerX + PLAYER_SIZE > coin.x &&
+      playerY < coin.y + COIN_SIZE &&
+      playerY + PLAYER_SIZE > coin.y
+    ) {
+      score++;
+      coin.y = -30;
+      coin.x = Math.random() * (MAP_WIDTH - COIN_SIZE);
+    }
+  }
+
+  for (let obstacle of obstacles) {
+    if (
+      playerX < obstacle.x + OBSTACLE_SIZE &&
+      playerX + PLAYER_SIZE > obstacle.x &&
+      playerY < obstacle.y + OBSTACLE_SIZE &&
+      playerY + PLAYER_SIZE > obstacle.y
+    ) {
+      lives--;
+      obstacle.y = -50;
+      obstacle.x = Math.random() * (MAP_WIDTH - OBSTACLE_SIZE);
+      
+      if (lives === 0) {
+        endGame();
+      }
+    }
+  }
+
+  // 绘制画面
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawPlayer();
+  drawCoins();
+  drawObstacles();
+
+  // 显示得分和生命值
+  document.getElementById('score').textContent = `得分：${score}`;
+  updateLivesUI();
+  
+  requestAnimationFrame(update);
+}
+
+// 更新生命值的界面显示
+function updateLivesUI() {
+  let livesUI = '';
+  
+  for (let i = 0; i < lives; i++) {
+    livesUI += '❤️';
+  }
+  
+  document.getElementById('lives').innerHTML = `生命值：${livesUI}`;
+}
+
+// 结束游戏
+function endGame() {
+  alert(`游戏结束，得分：${score}`);
+  location.reload();
+}
+
+// 处理键盘事件
+document.addEventListener('keydown', (event) => {
+  switch (event.key) {
+    case 'ArrowLeft':
+      if (playerX > 0) {
+        playerX -= 10;
+      }
+      break;
+    case 'ArrowRight':
+      if (playerX < MAP_WIDTH - PLAYER_SIZE) {
+        playerX += 10;
+      }
+      break;
+    default:
+      break;
+  }
+});
+// 获取 HTML 中的左移和右移按钮
+const moveLeftButton = document.querySelector('.move-left-button');
+const moveRightButton = document.querySelector('.move-right-button');
+
+// 添加触摸事件监听器来控制绿色方块左右移动
+moveLeftButton.addEventListener('touchstart', () => {
+  if (playerX > 0) {
+    playerX -= 10;
+  }
+});
+
+moveRightButton.addEventListener('touchstart', () => {
+  if (playerX < MAP_WIDTH - PLAYER_SIZE) {
+    playerX += 10;
+  }
+});
+
+
+// 启动游戏
+update();
+
+</script>
+</html>
